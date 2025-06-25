@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("GUEST")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  admissions Admission[]
+}
+
+model Admission {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String
+  address     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  pdfPath     String?  // Path ke file PDF
+}
